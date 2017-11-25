@@ -26,22 +26,27 @@ function getPlayerMove(data) {
 }
 
 function getAttackDirection(data, currentPlayer, ballStop, max_y) {
-  if ((data.playerIndex == 2 && ballStop.y < max_y/4) || (data.playerIndex == 0 && ballStop.y > (max_y/2 + max_y/4))){
-        return Math.atan2(max_y/2 - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
+  if ((data.playerIndex == 2 && ballStop.y < max_y / 4) || (data.playerIndex == 0 && ballStop.y > (max_y / 2 + max_y / 4))) {
+    return Math.atan2(max_y / 2 - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
   } else {
-      return Math.atan2(ballStop.y - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
+    return Math.atan2(ballStop.y - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
   }
 }
 
 function getDefendDirection(data, currentPlayer, ballStop) {
   var xDiff = ballStop.x - currentPlayer.x;
-  var yDiff = Math.abs(ballStop.y - currentPlayer.y);
-  var delta = 0;
-
-  var xDelta = data.ball.settings.radius * 2;
-  var xBallDiff = (xDiff - xDelta + delta);
-
-  return Math.atan2(ballStop.y - currentPlayer.y, xBallDiff);
+  var yDiff = ballStop.y - currentPlayer.y;
+  //var d = Math.sqrt(Math.pow(currentPlayer.x - ballStop.x, 2) + Math.pow(currentPlayer.y - ballStop.y, 2));
+  var xDelta = - data.ball.settings.radius;
+  var yDelta = 20;
+  if (currentPlayer.y < ballStop.y) {
+    yDelta *= -1;
+  }
+  
+  var xBallDiff = xDiff + xDelta;
+  var yBallDiff = yDiff + yDelta;
+  
+  return Math.atan2(yBallDiff, xBallDiff);
 }
 
 function getBallStats(ball, gameSettings) {
