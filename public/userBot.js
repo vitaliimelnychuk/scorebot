@@ -8,11 +8,12 @@ function getPlayerMove(data) {
   var ball = data.ball;
   var direction;
   var attackDirection;
+  var max_y = data.settings.field.height;
 
   var ballStop = getBallStats(ball, data.settings);
   if (ballStop.x < currentPlayer.x) {
     direction = getDefendDirection(data, currentPlayer, ballStop);
-    attackDirection = getAttackDirection(data, currentPlayer, ballStop)
+    attackDirection = getAttackDirection(data, currentPlayer, ballStop, max_y)
   } else {
     var direction = getAttackDirection(data, currentPlayer, ballStop);
   }
@@ -24,8 +25,13 @@ function getPlayerMove(data) {
   };
 }
 
-function getAttackDirection(data, currentPlayer, ballStop, ) {
-  return Math.atan2(ballStop.y - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
+function getAttackDirection(data, currentPlayer, ballStop, max_y) {
+  if ((data.playerIndex == 2 && ballStop.y < max_y/4) || (data.playerIndex == 0 && ballStop.y > (max_y/2 + max_y/4))){
+        return Math.atan2(max_y/2 - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
+  }
+  else {
+      return Math.atan2(ballStop.y - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
+  }
 }
 
 function getDefendDirection(data, currentPlayer, ballStop) {
@@ -64,4 +70,6 @@ function getRandomArbitrary(min, max) {
 function getRandomDirection() {
   return getRandomArbitrary(-0.01, 0.01);
 }
+
+
 onmessage = (e) => postMessage(getPlayerMove(e.data));
