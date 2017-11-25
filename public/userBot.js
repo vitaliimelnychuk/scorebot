@@ -9,7 +9,7 @@ function getPlayerMove(data) {
   var direction;
   var attackDirection;
   var max_y = data.settings.field.height;
-  
+
   var ballStop = getBallStats(ball, data.settings);
   if (ballStop.x < currentPlayer.x) {
     direction = getDefendDirection(data, currentPlayer, ballStop);
@@ -22,10 +22,19 @@ function getPlayerMove(data) {
   } else {
     direction += getRandomArbitrary(-0.2, 0.2);
   }
-  
+  var velocity = currentPlayer.velocity + data.settings.player.maxVelocityIncrement;
+
+  var players = getPlayersInfo(data, ballStop);
+  var thirdPlayer = getThirdDefender(players);
+  if (data.playerIndex == thirdPlayer.index
+    && data.ball.settings.x == 354
+    && data.ball.settings.y == 236.5) {
+    velocity = 1.5
+  }
+
   return {
     direction: direction,
-    velocity: currentPlayer.velocity + data.settings.player.maxVelocityIncrement
+    velocity
   };
 }
 
@@ -51,6 +60,30 @@ function getDefendDirection(data, currentPlayer, ballStop) {
   var yBallDiff = yDiff + yDelta;
 
   return Math.atan2(yBallDiff, xBallDiff);
+}
+
+function getThirdDefender(players) {
+  return players[2]
+}
+
+function getSecondDefender(players) {
+  return players[1];
+}
+function getPlayersInfo(data, ballStop) {
+  var players = []
+  console.log(data)
+  for (var i in data.yourTeam.players) {
+    var player = data.yourTeam.players[i];
+    players[i] = {
+      distToBall: getDispance(player.x, player.y, ballStop.x, ballStop.y),
+      index: i
+    }
+  }
+  players.sort(function (a, b) {
+    return a.distToBall - b.distToBall;
+  });
+
+  return players;
 }
 
 function getBallStats(ball, gameSettings) {
@@ -79,5 +112,9 @@ function getRandomDirection() {
   return getRandomArbitrary(-0.01, 0.01);
 }
 
+function getDispance(x1, y1, x2, y2) {
+
+  return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+}
 
 onmessage = (e) => postMessage(getPlayerMove(e.data));
