@@ -71,7 +71,6 @@ function getSecondDefender(players) {
 }
 function getPlayersInfo(data, ballStop) {
   var players = []
-  console.log(data)
   for (var i in data.yourTeam.players) {
     var player = data.yourTeam.players[i];
     players[i] = {
