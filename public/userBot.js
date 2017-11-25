@@ -4,18 +4,32 @@
 'use strict';
 
 function getPlayerMove(data) {
-  // TODO : IMPLEMENT THE BETTER STRATEGY FOR YOUR BOT
   var currentPlayer = data.yourTeam.players[data.playerIndex];
   var ball = data.ball;
+  var direction;
+  var attackDirection;
 
   var ballStop = getBallStats(ball, data.settings);
-
-  var attackDirection = Math.atan2(ballStop.y - currentPlayer.y, ballStop.x - currentPlayer.x - ball.settings.radius);
+  if (ballStop.x < currentPlayer.x) {
+    direction = getDefendDirection(data, currentPlayer, ballStop);
+    attackDirection = getAttackDirection(data, currentPlayer, ballStop)
+  } else {
+    var direction = getAttackDirection(data, currentPlayer, ballStop);
+  }
 
   return {
-    direction: attackDirection,
+    direction: direction,
     velocity: currentPlayer.velocity + data.settings.player.maxVelocityIncrement
   };
+}
+
+function getAttackDirection(data, currentPlayer, ballStop, ) {
+  return Math.atan2(ballStop.y - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
+}
+
+function getDefendDirection(data, currentPlayer, ballStop) {
+  var xBallDiff = ((ballStop.x - currentPlayer.x) - data.ball.settings.radius * 2);
+  return Math.atan2(ballStop.y - currentPlayer.y, xBallDiff);
 }
 
 function getBallStats(ball, gameSettings) {
