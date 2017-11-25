@@ -11,19 +11,30 @@ function getPlayerMove(data) {
   var max_y = data.settings.field.height;
 
   var ballStop = getBallStats(ball, data.settings);
+  var velocity = currentPlayer.velocity + data.settings.player.maxVelocityIncrement;
+
   if (ballStop.x < currentPlayer.x) {
     direction = getDefendDirection(data, currentPlayer, ballStop);
     attackDirection = getAttackDirection(data, currentPlayer, ballStop, max_y)
+    var players = getPlayersInfo(data, ballStop);
+    var thirdPlayer = getThirdDefender(players);
+    if (data.playerIndex == thirdPlayer.index) {
+      velocity = 6
+    }
   } else {
     var direction = getAttackDirection(data, currentPlayer, ballStop);
+    var players = getPlayersInfo(data, ballStop);
+    var thirdPlayer = getThirdDefender(players);
+    if (data.playerIndex == thirdPlayer.index) {
+      velocity = 3
+    }
   }
   if (currentPlayer.x > 400) {
     direction += getRandomArbitrary(-0.5, 0.5);
   } else {
     direction += getRandomArbitrary(-0.2, 0.2);
   }
-  var velocity = currentPlayer.velocity + data.settings.player.maxVelocityIncrement;
-
+ 
   var players = getPlayersInfo(data, ballStop);
   var thirdPlayer = getThirdDefender(players);
   if (data.playerIndex == thirdPlayer.index
