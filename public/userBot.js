@@ -9,7 +9,7 @@ function getPlayerMove(data) {
   var direction;
   var attackDirection;
   var max_y = data.settings.field.height;
-
+  
   var ballStop = getBallStats(ball, data.settings);
   if (ballStop.x < currentPlayer.x) {
     direction = getDefendDirection(data, currentPlayer, ballStop);
@@ -17,8 +17,12 @@ function getPlayerMove(data) {
   } else {
     var direction = getAttackDirection(data, currentPlayer, ballStop);
   }
-  direction += getRandomDirection();
-
+  if (currentPlayer.x > 400) {
+    direction += getRandomArbitrary(-0.5, 0.5);
+  } else {
+    direction += getRandomArbitrary(-0.2, 0.2);
+  }
+  
   return {
     direction: direction,
     velocity: currentPlayer.velocity + data.settings.player.maxVelocityIncrement
@@ -36,16 +40,16 @@ function getAttackDirection(data, currentPlayer, ballStop, max_y) {
 function getDefendDirection(data, currentPlayer, ballStop) {
   var xDiff = ballStop.x - currentPlayer.x;
   var yDiff = ballStop.y - currentPlayer.y;
-  //var d = Math.sqrt(Math.pow(currentPlayer.x - ballStop.x, 2) + Math.pow(currentPlayer.y - ballStop.y, 2));
+
   var xDelta = - data.ball.settings.radius;
-  var yDelta = 20;
+  var yDelta = 21;
   if (currentPlayer.y < ballStop.y) {
     yDelta *= -1;
   }
-  
+
   var xBallDiff = xDiff + xDelta;
   var yBallDiff = yDiff + yDelta;
-  
+
   return Math.atan2(yBallDiff, xBallDiff);
 }
 
