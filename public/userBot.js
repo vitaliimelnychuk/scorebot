@@ -28,8 +28,7 @@ function getPlayerMove(data) {
 function getAttackDirection(data, currentPlayer, ballStop, max_y) {
   if ((data.playerIndex == 2 && ballStop.y < max_y/4) || (data.playerIndex == 0 && ballStop.y > (max_y/2 + max_y/4))){
         return Math.atan2(max_y/2 - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
-  }
-  else {
+  } else {
       return Math.atan2(ballStop.y - currentPlayer.y, ballStop.x - currentPlayer.x - data.ball.settings.radius);
   }
 }
