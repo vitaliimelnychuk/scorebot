@@ -16,6 +16,7 @@ function getPlayerMove(data) {
   } else {
     var direction = getAttackDirection(data, currentPlayer, ballStop);
   }
+  direction += getRandomDirection();
 
   return {
     direction: direction,
@@ -48,6 +49,14 @@ function getBallStats(ball, gameSettings) {
 
 function getStopTime(ball) {
   return ball.velocity / ball.settings.moveDeceleration;
+}
+
+function getRandomArbitrary(min, max) {
+  return Math.random() * (max - min) + min;
+}
+
+function getRandomDirection() {
+  return getRandomArbitrary(-0.01, 0.01);
 }
 
 onmessage = (e) => postMessage(getPlayerMove(e.data));
